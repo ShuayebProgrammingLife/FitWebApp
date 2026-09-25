@@ -2,7 +2,7 @@ import type { Workout } from "./types";
 
 const BASE = "https://api.abcz.workers.dev/api/fitlog";
 
-export async function getWorksouts () : Promise< Workout[]> {
+export async function getWorkouts () : Promise< Workout[]> {
   const res = await fetch(BASE);
   if(!res.ok){
     throw new Error("Failed to load workouts");
