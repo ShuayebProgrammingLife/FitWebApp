@@ -2,7 +2,9 @@
 
 A dark, no-nonsense gym companion. Browse twelve lifts, open one for its specs and instructions, lock it into today's plan or save it for later, and watch your minutes and calories add up.
 
-**Live:** _your deployed link_ · **Repo:** _your GitHub link_
+**Live-01:**   https://fit-web-app-one.vercel.app
+**Live-02:**   https://fitlogshu.netlify.app
+**RepoLink:**  https://github.com/ShuayebProgrammingLife/FitWebApp
 
 ## Technologies
 - Next.js (App Router) + TypeScript
