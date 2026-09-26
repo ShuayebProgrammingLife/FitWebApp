@@ -4,7 +4,7 @@ interface IconProps { size ?: number; className ?: string};
 
 function Svg({size =16, className = "", children}: IconProps & {children: ReactNode}){
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="className">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={className}>
       {children}
     </svg>
   )

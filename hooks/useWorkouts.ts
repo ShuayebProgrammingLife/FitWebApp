@@ -11,11 +11,13 @@ export function useWorkouts() {
 
   useEffect(() => {
     let live = true;
-    getWorkouts()
+    const controller = new AbortController();
+    getWorkouts(controller.signal)
       .then((workouts) => live && setState({ status: "ready", workouts }))
       .catch(() => live && setState({ status: "error", workouts: [] }));
     return () => {
       live = false;
+      controller.abort();
     };
   }, [attempt]);
 

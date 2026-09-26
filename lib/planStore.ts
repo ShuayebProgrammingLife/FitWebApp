@@ -12,13 +12,16 @@ let lastRaw: string | null = null;
 const listeners = new Set<() => void>();
 
 const ids = (v: unknown): number[] =>
-  Array.isArray(v) ? v.filter((n): n is number => typeof n === "number") : [];
+  Array.isArray(v)
+    ? [...new Set(v.filter((n): n is number => typeof n === "number" && Number.isInteger(n) && n > 0))]
+    : [];
 
 function parse(raw: string | null): PlanState {
   if (!raw) return EMPTY_STATE;
   try {
     const p = JSON.parse(raw) as Partial<PlanState>;
-    return { plan: ids(p.plan), saved: ids(p.saved), done: ids(p.done) };
+    const plan = ids(p.plan);
+    return { plan, saved: ids(p.saved), done: ids(p.done).filter((id) => plan.includes(id)) };
   } catch {
     return EMPTY_STATE;
   }
@@ -52,14 +55,23 @@ export const planStore = {
     return EMPTY_STATE;
   },
   set(next: PlanState) {
-    cache = next;
+    const plan = ids(next.plan);
+    const normalized = {
+      plan,
+      saved: ids(next.saved),
+      done: ids(next.done).filter((id) => plan.includes(id)),
+    };
+    cache = normalized;
     try {
-      const s = JSON.stringify(next);
+      const s = JSON.stringify(normalized);
       localStorage.setItem(KEY, s);
       lastRaw = s;
     } catch {
       /* ignore quota / private-mode errors */
     }
     emit();
+  },
+  update(updater: (state: PlanState) => PlanState) {
+    this.set(updater(this.getSnapshot()));
   },
 };

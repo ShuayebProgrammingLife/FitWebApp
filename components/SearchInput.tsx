@@ -17,7 +17,7 @@ export default function SearchInput({ value, onChange, placeholder, label }: Pro
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-[9px] border border-[#232732] bg-[#13161d] py-2 pl-9 pr-3 text-xs text-white placeholder:text-muted2"
+        className="w-full rounded-[9px] border border-[#232732] bg-[#13161d] py-2 pl-9 pr-3 text-xs text-white placeholder:text-muted2 focus-visible:ring-2 focus-visible:ring-accent"
       />
     </label>
   );

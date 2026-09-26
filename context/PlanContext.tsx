@@ -42,30 +42,35 @@ export function PlanProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const addToPlan = (w: Workout) => {
-    if (state.plan.includes(w.id)) return notify(`${w.name} is already in today's plan`, "info");
-    if (state.plan.length >= PLAN_CAP) return notify("Today's plan is full. Remove a lift to add another.", "error");
-    planStore.set({ ...state, plan: [...state.plan, w.id] });
+    const latest = planStore.getSnapshot();
+    if (latest.plan.includes(w.id)) return notify(`${w.name} is already in today's plan`, "info");
+    if (latest.plan.length >= PLAN_CAP) return notify("Today's plan is full. Remove a lift to add another.", "error");
+    planStore.set({ ...latest, plan: [...latest.plan, w.id] });
     notify("Added to today's plan");
   };
 
   const saveForLater = (w: Workout) => {
-    if (state.saved.includes(w.id)) return notify(`${w.name} is already saved`, "info");
-    planStore.set({ ...state, saved: [...state.saved, w.id] });
+    const latest = planStore.getSnapshot();
+    if (latest.saved.includes(w.id)) return notify(`${w.name} is already saved`, "info");
+    planStore.set({ ...latest, saved: [...latest.saved, w.id] });
     notify("Saved for later");
   };
 
   const removeFrom = (list: ListKey, w: Workout) => {
+    const latest = planStore.getSnapshot();
     planStore.set({
-      ...state,
-      [list]: state[list].filter((id) => id !== w.id),
-      done: list === "plan" ? state.done.filter((id) => id !== w.id) : state.done,
+      ...latest,
+      [list]: latest[list].filter((id) => id !== w.id),
+      done: list === "plan" ? latest.done.filter((id) => id !== w.id) : latest.done,
     });
     notify(list === "plan" ? "Removed from today's plan" : "Removed from saved");
   };
 
   const toggleDone = (w: Workout) => {
-    const isDone = state.done.includes(w.id);
-    planStore.set({ ...state, done: isDone ? state.done.filter((id) => id !== w.id) : [...state.done, w.id] });
+    const latest = planStore.getSnapshot();
+    const isDone = latest.done.includes(w.id);
+    if (!latest.plan.includes(w.id)) return;
+    planStore.set({ ...latest, done: isDone ? latest.done.filter((id) => id !== w.id) : [...latest.done, w.id] });
     notify(isDone ? "Marked as not done" : `${w.name} marked as done`);
   };
 
